@@ -54,6 +54,7 @@ OUTPUT = 1         # as defined in wiring.h
 ANALOG = 2         # analog pin in analogInput mode
 PWM = 3            # digital pin in PWM output mode
 SERVO = 4          # digital pin in SERVO mode
+INPUT_PULLUP = 11
 
 # Pin types
 DIGITAL = OUTPUT   # same as OUTPUT below
@@ -468,6 +469,12 @@ class Pin(object):
                               "digital".format(self))
             self._mode = SERVO
             self.board.servo_config(self.pin_number)
+            return
+
+        if mode == INPUT_PULLUP:
+            self._mode = INPUT
+            self.board.sp.write(bytearray([SET_PIN_MODE, self.pin_number, INPUT_PULLUP]))
+            self.enable_reporting()
             return
 
         # Set mode with SET_PIN_MODE message
